@@ -81,30 +81,35 @@ public class SaveChanges {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            Changes changes = objectMapper.readValue(line, Changes.class);
-            for (ModifyChangeFromJSON modifyChangeFromJSON : changes.modifyChanges) {
-                ModifyChange modifyChange = new ModifyChange(modifyChangeFromJSON.timestamp,
-                        () -> modifyChangeFromJSON.oldText,
-                        () -> modifyChangeFromJSON.newText,
-                        new File(modifyChangeFromJSON.uri),
-                        new File(modifyChangeFromJSON.uri));
-            }
-            for (CreateFileChangeFromJSON createFileChangeFromJSON : changes.createChanges) {
-                AddChange addChange = new AddChange(createFileChangeFromJSON.timestamp,
-                        new FilePointer(new File(createFileChangeFromJSON.uri), 0),
-                        createFileChangeFromJSON.text);
-            }
-            for (DeleteFileChangeFromJSON deleteFileChangeFromJSON: changes.deleteChanges) {
-                DeleteChange deleteChange = new DeleteChange(deleteFileChangeFromJSON.timestamp,
-                        new FilePointer(new File(deleteFileChangeFromJSON.uri), 0),
-                        deleteFileChangeFromJSON.text);
-            }
-            for (RenameFileChangeFromJSON renameFileChangeFromJSON: changes.renameChanges) {
-                RenameChange renameChange = new RenameChange(renameFileChangeFromJSON.timestamp,
-                        () -> renameFileChangeFromJSON.text,
-                        () -> renameFileChangeFromJSON.text,
-                        new File(renameFileChangeFromJSON.oldUri),
-                        new File(renameFileChangeFromJSON.newUri));
+            if (line.equals("changes")) {
+                line = scanner.nextLine();
+                Changes changes = objectMapper.readValue(line, Changes.class);
+                for (ModifyChangeFromJSON modifyChangeFromJSON : changes.modifyChanges) {
+                    ModifyChange modifyChange = new ModifyChange(modifyChangeFromJSON.timestamp,
+                            () -> modifyChangeFromJSON.oldText,
+                            () -> modifyChangeFromJSON.newText,
+                            new File(modifyChangeFromJSON.uri),
+                            new File(modifyChangeFromJSON.uri));
+                }
+                for (CreateFileChangeFromJSON createFileChangeFromJSON : changes.createChanges) {
+                    AddChange addChange = new AddChange(createFileChangeFromJSON.timestamp,
+                            new FilePointer(new File(createFileChangeFromJSON.uri), 0),
+                            createFileChangeFromJSON.text);
+                }
+                for (DeleteFileChangeFromJSON deleteFileChangeFromJSON : changes.deleteChanges) {
+                    DeleteChange deleteChange = new DeleteChange(deleteFileChangeFromJSON.timestamp,
+                            new FilePointer(new File(deleteFileChangeFromJSON.uri), 0),
+                            deleteFileChangeFromJSON.text);
+                }
+                for (RenameFileChangeFromJSON renameFileChangeFromJSON : changes.renameChanges) {
+                    RenameChange renameChange = new RenameChange(renameFileChangeFromJSON.timestamp,
+                            () -> renameFileChangeFromJSON.text,
+                            () -> renameFileChangeFromJSON.text,
+                            new File(renameFileChangeFromJSON.oldUri),
+                            new File(renameFileChangeFromJSON.newUri));
+                }
+            } else if (line.equals("search")) {
+                line = scanner.nextLine();
             }
         }
     }
